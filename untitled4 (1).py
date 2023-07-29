@@ -33,14 +33,46 @@ data = pd.read_csv('/content/drive/MyDrive/Project Dataset (insurance)-20230529T
 
 data.columns
 
+import pandas as pd
+
+original_df = pd.DataFrame(data)
+
+original_df.info()
+
 data.isnull().sum()
 
 print(data.describe())
 
+original_df.describe(include='object')
+
+original_df.describe(include='int')
+
+original_df.describe(include='float')
+
+plt.figure(figsize= (14,6))
+ax = sns.countplot(x = "Customer type", data = data, palette = "rocket_r")
+ax.set_title("Type of customers", fontsize = 25)
+ax.set_xlabel("Customer type", fontsize = 16)
+ax.set_ylabel("Customer Count", fontsize = 16)
+
+plt.figure(figsize=(14,6))
+ax = sns.boxplot(x="Branch", y = "Rating" ,data =data, palette= "RdYlBu")
+ax.set_title("Rating distribution between branches", fontsize = 25)
+ax.set_xlabel(xlabel = "Branches", fontsize = 16)
+ax.set_ylabel(ylabel = "Rating distribution", fontsize = 16)
+
+plt.figure(figsize=(12, 6))
+sns.barplot(x='Product line', y='Total', hue='Gender', data=data)
+plt.xticks(rotation=45)
+plt.show()
+
+plt.figure(figsize=(14,6))
+rating_vs_sales = sns.lineplot(x="Total", y= "Rating", data=data)
+
 df = pd.read_csv('/content/drive/MyDrive/Project Dataset (insurance)-20230529T080528Z-001/dataset supermarket/supermarket_sales-Sheet1.csv')
 
 # Histograms for numerical columns
-numerical_columns = ['Unit price', 'Quantity', 'Tax 5%', 'Total', 'cogs', 'gross income', 'Rating']
+numerical_columns = ['Unit price', 'Quantity', 'Tax 5%', 'Total']
 
 fig, axs = plt.subplots(2, 4, figsize=(20, 10))
 
@@ -50,19 +82,6 @@ for i, col in enumerate(numerical_columns):
     sns.histplot(df[col], kde=True, ax=axs[row, pos])
 
 fig.delaxes(axs[1,3]) # we remove the last sub-plot which is empty
-plt.tight_layout()
-plt.show()
-
-# Bar plots for categorical columns
-categorical_columns = ['Branch', 'City', 'Customer type', 'Gender', 'Product line', 'Payment']
-
-fig, axs = plt.subplots(2, 3, figsize=(20, 10))
-
-for i, col in enumerate(categorical_columns):
-    row = i // 3
-    pos = i % 3
-    sns.countplot(x=df[col], ax=axs[row, pos])
-
 plt.tight_layout()
 plt.show()
 
@@ -231,6 +250,8 @@ plt.grid(True)
 plt.legend(title='City', title_fontsize='13', loc='upper left', fontsize='12')
 plt.show()
 
+
+
 data['Month'] = data['Date'].dt.month
 
 grouped_data = data.groupby(['City', 'Month'])['Total'].sum().reset_index()
@@ -391,4 +412,3 @@ plt.title("Model R2 Score Comparison")
 plt.xlabel("R2 Score")
 plt.ylabel("Model")
 plt.show()
-
